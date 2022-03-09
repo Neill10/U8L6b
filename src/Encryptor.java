@@ -87,12 +87,16 @@ public class Encryptor {
         int length = message.length();
         String end = "";
         int letters = numCols * numRows;
+        
         for (int i = 0; i < (length / letters); i++) {
             String str = message.substring(0, letters);
             message = message.substring(letters);
             fillBlock(str);//str should be changed by the void fillBlock method
             end += encryptBlock();
         }
+        fillBlock(message);
+        end += encryptBlock();
+
         return end;
     }
 }
