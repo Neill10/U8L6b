@@ -141,60 +141,76 @@ public class Encryptor {
      */
     public String decryptMessage(String encryptedMessage)
     {
-        String substring = encryptedMessage;
-        String sub = "";
-        int count = 0;
-        for (int c = 0; c < letterBlock[0].length; c++)
+        String[][] string = new String[numRows][numCols];
+        int length = encryptedMessage.length();
+        String end = "";
+        int letters = numCols * numRows;
+        if((double)length % letters == 0)//had to add this im guessing cause of perfect fitting?
         {
-            for (int r = 0; r < letterBlock.length; r++)
-            {
-                letterBlock[r][c] = substring.substring(count, count+1);
-                count++;
+            for (int i = 0; i < (length / letters); i++) {
+                String str = encryptedMessage.substring(0, letters);
+                encryptedMessage = encryptedMessage.substring(letters);
+                fillBlock2(str);//str should be changed by the void fillBlock method
+                end += printContent(getLetterBlock());
             }
         }
-        sub += decryptBlock();
-        while (substring.length() > numRows*numCols)
-        {
-            count = 0;
-            substring = substring.substring(numCols*numRows);
-            for (int c = 0; c < letterBlock[0].length; c++)
-            {
-                for (int r = 0; r < letterBlock.length; r++)
-                {
-                    letterBlock[r][c] = substring.substring(count, count+1);
-                    count++;
-                }
+        else{
+            for (int i = 0; i < (length / letters); i++) {
+                String str = encryptedMessage.substring(0, letters);
+                encryptedMessage = encryptedMessage.substring(letters);
+                fillBlock2(str);//str should be changed by the void fillBlock method
+                end += printContent(getLetterBlock());
             }
-            sub += decryptBlock();
+            fillBlock(encryptedMessage);//str should be changed by the void fillBlock method
+            end += printContent(getLetterBlock());;
         }
-        String decrypted = removeBlock(sub);
-        return decrypted;
-    }
-    public String removeBlock(String str)
-    {
-        for (int i = str.length()-1; i > 0; i--)
+        int endLength = end.length();
+        int indexCount = endLength - 1;
+        for(int a = end.length(); a > 0 ; a--)
         {
-            if (str.substring(i-1,i).equals(("A")))
+            if(end.substring(indexCount).equals("A"))
             {
-                str = str.substring(0,i-1);
+                end = end.substring(0,indexCount);
             }
             else
             {
                 break;
             }
+            indexCount--;
         }
-        return str;
+        return end;
     }
-    public String decryptBlock()
-    {
-        String message = "";
-        for (int r = 0; r < letterBlock.length; r++)
-        {
-            for (int c = 0; c < letterBlock[0].length; c++)
-            {
-                message += letterBlock[r][c];
+    private void fillBlock2(String str) {
+        int index = 0;
+        int length = str.length();
+        for (int a = 0; a < numCols; a++) {
+            for (int b = 0; b < numRows; b++) {
+                if (length < numCols * numRows) {
+                    if (index < length) {
+                        String string = str.charAt(index) + "";
+                        letterBlock[b][a] = string;
+                        index++;
+                    } else {
+                        letterBlock[b][a] = "A";
+                    }
+                } else {
+                    String string = str.charAt(index) + "";
+                    letterBlock[b][a] = string;
+                    index++;
+                }
             }
         }
-        return message;
+    }
+    private String printContent(String[][] array2D)
+    {
+        String str = "";
+        for(int i = 0; i < array2D.length;i++)
+        {
+            for(int x = 0 ; x < array2D[0].length;x++)
+            {
+                str += array2D[i][x];
+            }
+        }
+        return str;
     }
 }
