@@ -108,17 +108,93 @@ public class Encryptor {
         }
         /*
         for (int i = 0; i < (length / letters); i++) {
-            String str = message.substring(0, letters);
-            message = message.substring(letters);
-            fillBlock(str);//str should be changed by the void fillBlock method
-            end += encryptBlock();
+        String str = message.substring(0, letters);
+        message = message.substring(letters);
+        fillBlock(str);//str should be changed by the void fillBlock method
+        end += encryptBlock();
         }
-
          */
-
-
-
-
         return end;
+    }
+
+    /**  Decrypts an encrypted message. All filler 'A's that may have been
+     *   added during encryption will be removed, so this assumes that the
+     *   original message (BEFORE it was encrypted) did NOT end in a capital A!
+     *
+     *   NOTE! When you are decrypting an encrypted message,
+     *         be sure that you have initialized your Encryptor object
+     *         with the same row/column used to encrypted the message! (i.e.
+     *         the “encryption key” that is necessary for successful decryption)
+     *         This is outlined in the precondition below.
+     *
+     *   Precondition: the Encryptor object being used for decryption has been
+     *                 initialized with the same number of rows and columns
+     *                 as was used for the Encryptor object used for encryption.
+     *
+     *   @param encryptedMessage  the encrypted message to decrypt
+     *
+     *   @return  the decrypted, original message (which had been encrypted)
+     *
+     *   TIP: You are encouraged to create other helper methods as you see fit
+     *        (e.g. a method to decrypt each section of the decrypted message,
+     *         similar to how encryptBlock was used)
+     */
+    public String decryptMessage(String encryptedMessage)
+    {
+        String substring = encryptedMessage;
+        String sub = "";
+        int count = 0;
+        for (int c = 0; c < letterBlock[0].length; c++)
+        {
+            for (int r = 0; r < letterBlock.length; r++)
+            {
+                letterBlock[r][c] = substring.substring(count, count+1);
+                count++;
+            }
+        }
+        sub += decryptBlock();
+        while (substring.length() > numRows*numCols)
+        {
+            count = 0;
+            substring = substring.substring(numCols*numRows);
+            for (int c = 0; c < letterBlock[0].length; c++)
+            {
+                for (int r = 0; r < letterBlock.length; r++)
+                {
+                    letterBlock[r][c] = substring.substring(count, count+1);
+                    count++;
+                }
+            }
+            sub += decryptBlock();
+        }
+        String decrypted = removeBlock(sub);
+        return decrypted;
+    }
+    public String removeBlock(String str)
+    {
+        for (int i = str.length()-1; i > 0; i--)
+        {
+            if (str.substring(i-1,i).equals(("A")))
+            {
+                str = str.substring(0,i-1);
+            }
+            else
+            {
+                break;
+            }
+        }
+        return str;
+    }
+    public String decryptBlock()
+    {
+        String message = "";
+        for (int r = 0; r < letterBlock.length; r++)
+        {
+            for (int c = 0; c < letterBlock[0].length; c++)
+            {
+                message += letterBlock[r][c];
+            }
+        }
+        return message;
     }
 }
