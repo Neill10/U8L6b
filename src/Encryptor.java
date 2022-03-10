@@ -87,15 +87,37 @@ public class Encryptor {
         int length = message.length();
         String end = "";
         int letters = numCols * numRows;
-        
+        if((double)length % letters == 0)//had to add this im guessing cause of perfect fitting?
+        {
+            for (int i = 0; i < (length / letters); i++) {
+                String str = message.substring(0, letters);
+                message = message.substring(letters);
+                fillBlock(str);//str should be changed by the void fillBlock method
+                end += encryptBlock();
+            }
+        }
+        else{
+            for (int i = 0; i < (length / letters); i++) {
+                String str = message.substring(0, letters);
+                message = message.substring(letters);
+                fillBlock(str);//str should be changed by the void fillBlock method
+                end += encryptBlock();
+            }
+            fillBlock(message);//str should be changed by the void fillBlock method
+            end += encryptBlock();
+        }
+        /*
         for (int i = 0; i < (length / letters); i++) {
             String str = message.substring(0, letters);
             message = message.substring(letters);
             fillBlock(str);//str should be changed by the void fillBlock method
             end += encryptBlock();
         }
-        fillBlock(message);
-        end += encryptBlock();
+
+         */
+
+
+
 
         return end;
     }

@@ -212,6 +212,7 @@ public class EncryptorTester
     if (actualEncrypted5.equals(expectedEncrypted5))
     {
       System.out.println("\nTest 5 PASSED!");
+
     }
     else
     {
